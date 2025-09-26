@@ -1,0 +1,58 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Flask instance folder (if you use it for configs, DB)
+instance/
+*.sqlite3
+
+# Environment variables
+.env
+.env.*   # any other env files you might create
+
+# IDE/editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Mac/Linux OS files
+.DS_Store
+*.swp
+*~
+
+# Docker
+*.log
+docker-compose.override.yml
+docker-compose.override.*.yml
+*.tmp
+*.bak
+*.pid
+**/tmp/
+
+# Pytest cache
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+
+# Node (if using front-end build tools)
+node_modules/
+
+# Backup files
+*.bak
+*.old
+*.orig
+
+# Logs
+*.log
+
+# Ignore Jupyter Notebook checkpoints (if you use notebooks)
+.ipynb_checkpoints/
