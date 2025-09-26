@@ -79,3 +79,140 @@ The primary goal of this project is to develop a **web-based diet and nutrition 
 ### Phase 6: UI Polish
 - [ ] Dashboard-style layout with Bootstrap/Tailwind
 - [ ] Responsive and polished frontend
+
+## 🗂️ Modular Development Roadmap – NutriTrack
+### Phase 1: Core Setup & User Management
+
+Goal: Build the project foundation and authentication system.
+
+- Sumeet
+
+    - Setup Flask project structure (routes, templates, static, DB config).
+
+    - Configure SQLite database.
+
+    - Create database schema (Users, Profiles, Food, Logs, Reports).
+
+- Vivek
+
+    - Implement User Registration + Login with password hashing.
+
+    - Create Profile Management module (age, gender, weight, activity, diet preferences, allergies).
+
+    - Basic frontend forms for login/registration/profile.
+
+✅ Deliverable: Working multi-user login + profile system with DB.
+
+### Phase 2: Food Database & Logging
+
+Goal: Create Indian food database and logging system.
+
+- Sumeet
+
+    - Curate CSV/SQLite database of Indian foods with macros + micronutrients.
+
+    - Write data handling functions (using Pandas) to fetch nutrition values from DB.
+
+- Vivek
+
+    - Build Food Logging UI (form for manual entry + portion sizes).
+
+    - Connect form to backend → save logs in DB.
+
+    - Daily nutrition calculation (totals for macros + micros).
+
+✅ Deliverable: Food logging system with database connection.
+
+### Phase 3: Dashboard & Analysis
+
+Goal: Build user dashboard + analysis features.
+
+- Sumeet
+
+    - Backend data processing: daily/weekly summaries with Pandas.
+
+    - Generate plots (Matplotlib/Seaborn) → calories, macros pie, micros bar.
+
+- Vivek
+
+    - Design Dashboard UI (Bootstrap/Tailwind).
+
+    - Display charts, daily summary cards, and streak counter.
+
+✅ Deliverable: Interactive dashboard with charts + daily/weekly tracking.
+
+### Phase 4: Recommendations & Meal Planner
+
+Goal: Add intelligence with context-aware advice.
+
+- Sumeet
+
+    - Implement Rule-based → extend to Context-Aware Recommendations.
+
+    - Example: If carbs > 70% by dinner → suggest protein-rich dinner options.
+
+- Vivek
+
+    - Develop Meal Planner (generate balanced meals from DB).
+
+    - UI integration for recommendations + meal planner.
+
+✅ Deliverable: Smart recommendations + meal planner visible on dashboard.
+
+### Phase 5: Reports & Gamification
+
+Goal: Enhance usability and engagement.
+
+- Sumeet
+
+    - PDF report generation (ReportLab) with daily/weekly summaries.
+
+    - Excel export (OpenPyXL).
+
+- Vivek
+
+    -Implement Gamification: badges, streaks, leaderboards.
+
+    - UI integration of gamification elements.
+
+✅ Deliverable: Exportable reports + gamified user experience.
+
+### Phase 6: UI Polish & Final Integration
+
+Goal: Deliver a polished, production-ready dashboard.
+
+- Sumeet
+
+    - Backend optimization (clean routes, modularize functions).
+
+    - API endpoints for food/nutrition (if needed for future expansion).
+
+- Vivek
+
+    - Polished frontend dashboard (navigation, responsive design).
+
+    - Final UI/UX improvements.
+
+✅ Deliverable: Fully working NutriTrack web app with polished dashboard.
+
+### ⚖️ Task Balance
+
+- Sumeet → More backend/data handling heavy (DB, Pandas, reports, recommendations).
+
+Vivek → More frontend/UI heavy (forms, dashboard, gamification, styling).
+
+Both share integration tasks and testing.
+
+### 📆 Suggested Timeline (6 Weeks)
+
+- Week 1 → Phase 1 (User Management)
+
+- Week 2 → Phase 2 (Food Database + Logging)
+
+- Week 3 → Phase 3 (Dashboard + Analysis)
+
+- Week 4 → Phase 4 (Recommendations + Planner)
+
+- Week 5 → Phase 5 (Reports + Gamification)
+
+- Week 6 → Phase 6 (Polish, testing, documentation)
