@@ -49,6 +49,7 @@ The primary goal of this project is to develop a **web-based diet and nutrition 
 - Database: SQLite
 - Report Generation: ReportLab (PDF), OpenPyXL (Excel)
 
+---
 
 ## Implementation Roadmap
 
@@ -79,6 +80,8 @@ The primary goal of this project is to develop a **web-based diet and nutrition 
 ### Phase 6: UI Polish
 - [ ] Dashboard-style layout with Bootstrap/Tailwind
 - [ ] Responsive and polished frontend
+
+---
 
 ## 🗂️ Modular Development Roadmap – NutriTrack
 ### Phase 1: Core Setup & User Management
@@ -199,7 +202,7 @@ Goal: Deliver a polished, production-ready dashboard.
 
 - Sumeet → More backend/data handling heavy (DB, Pandas, reports, recommendations).
 
-Vivek → More frontend/UI heavy (forms, dashboard, gamification, styling).
+- Vivek → More frontend/UI heavy (forms, dashboard, gamification, styling).
 
 Both share integration tasks and testing.
 
