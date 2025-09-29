@@ -231,7 +231,7 @@ Both share integration tasks and testing.
     </td>
     <td align="center">
       <a href="https://github.com/viveksisal">
-        <img src="https://github.com/viveksisal.png" width="80px;" alt="Siddhant Kore"/><br />
+        <img src="https://github.com/viveksisal.png" width="80px;" alt="Vivek Sisal"/><br />
         <sub><b>Siddhant Kore</b></sub>
       </a>
     </td>
