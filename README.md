@@ -232,7 +232,7 @@ Both share integration tasks and testing.
     <td align="center">
       <a href="https://github.com/viveksisal">
         <img src="https://github.com/viveksisal.png" width="80px;" alt="Vivek Sisal"/><br />
-        <sub><b>Siddhant Kore</b></sub>
+        <sub><b>Vivek Sisal</b></sub>
       </a>
     </td>
   </tr>
