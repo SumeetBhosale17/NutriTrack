@@ -219,3 +219,21 @@ Both share integration tasks and testing.
 - Week 5 → Phase 5 (Reports + Gamification)
 
 - Week 6 → Phase 6 (Polish, testing, documentation)
+
+## Contributors
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/SumeetBhosale17">
+        <img src="https://github.com/SumeetBhosale17.png" width="80px;" alt="Sumeet Bhosale"/><br />
+        <sub><b>Sumeet Bhosale</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/viveksisal">
+        <img src="https://github.com/viveksisal.png" width="80px;" alt="Siddhant Kore"/><br />
+        <sub><b>Siddhant Kore</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
