@@ -3,7 +3,7 @@ from config import Config
 from app.models import User
 from app import db
 import jwt
-from datetime import datetime
+from datetime import datetime, timedelta
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -78,7 +78,7 @@ def setup_profile():
 def generate_verification_token(email):
     payload = {
         'email': email,
-        'exp': datetime.now()
+        'exp': datetime.now() + timedelta(minutes=30)
     }
     token = jwt.encode(payload, Config.SECRET_KEY, algorithm='HS256')
     return token
@@ -96,8 +96,10 @@ def send_verification():
         return redirect(url_for('auth.dashboard'))
     
     token = generate_verification_token(user.email)
-    verification_link = url_for('verify_email', token=token, _external=True)
-    
+    verification_link = url_for('auth.verify_email', token=token, _external=True)
+    user.verification_token = token
+    db.session.commit()
+
     # TODO: Replace this with actual email sending logic
     print(f"Verification Link: {verification_link}") # temporary for dev
 
