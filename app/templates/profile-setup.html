@@ -17,20 +17,26 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: radial-gradient(circle at top left, #121826, #0b0e17);
-      color: #fff;
+      background: linear-gradient(135deg, #f0fdfa, #dbeafe);
+      color: #1e293b;
     }
 
     .container {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(25, 30, 45, 0.95);
+      background: #ffffff;
       border-radius: 16px;
       padding: 40px 60px;
       width: 850px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       animation: fadeIn 1.2s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 40px rgba(20, 184, 166, 0.2);
     }
 
     @keyframes fadeIn {
@@ -40,74 +46,23 @@
 
     .content {
       width: 100%;
-      background: rgba(255, 255, 255, 0.05);
+      background: #f9fafb;
       border-radius: 12px;
       padding: 30px 40px;
-      box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.03);
     }
 
     h1 {
       text-align: center;
       margin-bottom: 1.5rem;
-      color: #2dd4bf;
+      color: #14b8a6;
       font-size: 2rem;
-      filter: drop-shadow(0 0 8px #2dd4bf);
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 15px;
-    }
-
-    label {
-      font-size: 0.9rem;
-      color: #b5b5b5;
-      margin-bottom: 6px;
-    }
-
-    input, select {
-      background: #1b1f2b;
-      border: 1px solid #333;
-      padding: 12px;
-      border-radius: 8px;
-      color: #fff;
-      outline: none;
-      font-size: 0.95rem;
-      transition: all 0.3s;
-    }
-
-    input:focus, select:focus {
-      border-color: #2dd4bf;
-      box-shadow: 0 0 5px #2dd4bf;
-    }
-
-    input[readonly] {
-      opacity: 0.8;
-      background: #222634;
-      cursor: not-allowed;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(90deg, #2dd4bf, #3b82f6);
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-      margin-top: 10px;
-    }
-
-    button:hover {
-      transform: scale(1.03);
+      filter: drop-shadow(0 0 6px rgba(20,184,166,0.3));
     }
 
     .verify-section {
-      background: rgba(255, 255, 255, 0.05);
-      border-left: 4px solid #f87171;
+      background: rgba(239, 68, 68, 0.08);
+      border-left: 4px solid #ef4444;
       padding: 15px;
       border-radius: 8px;
       margin-bottom: 25px;
@@ -119,24 +74,76 @@
     }
 
     .verify-section p {
-      color: #fca5a5;
+      color: #b91c1c;
       margin-bottom: 10px;
     }
 
     .verify-btn {
       background: linear-gradient(90deg, #f87171, #ef4444);
-      padding: 10px;
+      padding: 10px 20px;
       border: none;
       border-radius: 6px;
       color: white;
       cursor: pointer;
       font-weight: 600;
-      transition: 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .verify-btn:hover {
       transform: scale(1.03);
-      background: linear-gradient(90deg, #ef4444, #b91c1c);
+      box-shadow: 0 4px 10px rgba(239,68,68,0.3);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-size: 0.9rem;
+      color: #475569;
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      padding: 12px;
+      border-radius: 8px;
+      color: #0f172a;
+      outline: none;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+
+    input:focus, select:focus {
+      border-color: #14b8a6;
+      box-shadow: 0 0 6px rgba(20,184,166,0.4);
+    }
+
+    input[readonly] {
+      opacity: 0.8;
+      background: #f1f5f9;
+      cursor: not-allowed;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #14b8a6, #3b82f6);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 15px rgba(20,184,166,0.4);
     }
 
     @media (max-width: 768px) {
@@ -202,6 +209,18 @@
             <option {% if user.goal=='Lose Weight' %}selected{% endif %}>Lose Weight</option>
             <option {% if user.goal=='Maintain Weight' %}selected{% endif %}>Maintain Weight</option>
             <option {% if user.goal=='Gain Weight' %}selected{% endif %}>Gain Weight</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Activity Level</label>
+          <select name="activity_level" required>
+            <option value="" {% if not user.activity_level %}selected{% endif %}>Select Activity Level</option>
+            <option {% if user.activity_level=='Sedentary' %}selected{% endif %}>Sedentary (Little or no exercise)</option>
+            <option {% if user.activity_level=='Lightly Active' %}selected{% endif %}>Lightly Active (1–3 days/week)</option>
+            <option {% if user.activity_level=='Moderately Active' %}selected{% endif %}>Moderately Active (3–5 days/week)</option>
+            <option {% if user.activity_level=='Very Active' %}selected{% endif %}>Very Active (6–7 days/week)</option>
+            <option {% if user.activity_level=='Super Active' %}selected{% endif %}>Super Active (Physical job or athlete)</option>
           </select>
         </div>
 

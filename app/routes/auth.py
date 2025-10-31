@@ -67,7 +67,11 @@ def setup_profile():
         user.height_cm = float(request.form['height_cm'])
         user.weight_kg = float(request.form['weight_kg'])
         user.goal = request.form['goal']
+        user.activity_level = request.form['activity_level']
         user.updated_at = datetime.now()
+
+        user.calculate_bmi()
+        user.calculate_maintenance_calories()
 
         db.session.commit()
         flash("Profile setup complete!", "Success")
