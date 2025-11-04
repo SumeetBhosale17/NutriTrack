@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NutriTrack | Smart Nutrition Simplified</title>
+    <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: "Poppins", sans-serif;
+        }
+
+        body {
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: linear-gradient(135deg, #f0fdfa, #dbeafe);
+          color: #1e293b;
+        }
+
+        .container {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: #ffffff;
+          border-radius: 16px;
+          padding: 40px 60px;
+          width: 850px;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+          animation: fadeIn 1.2s ease;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .container:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 14px 40px rgba(20, 184, 166, 0.2);
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+
+        .logo-section {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 45%;
+        }
+
+        .logo {
+          font-size: 3rem;
+          color: #14b8a6;
+          margin-bottom: 10px;
+          filter: drop-shadow(0 0 8px rgba(20,184,166,0.3));
+        }
+
+        .logo-section h1 {
+          font-size: 2rem;
+          color: #0f172a;
+        }
+
+        .logo-section p {
+          font-size: 0.95rem;
+          color: #64748b;
+          margin-top: 6px;
+        }
+
+        .form-section {
+          width: 45%;
+          background: #f9fafb;
+          border-radius: 12px;
+          padding: 30px;
+          box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .toggle {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 20px;
+        }
+
+        .toggle label {
+          color: #64748b;
+          font-size: 0.95rem;
+          cursor: pointer;
+          transition: color 0.3s;
+        }
+
+        .toggle input {
+          appearance: none;
+          width: 45px;
+          height: 22px;
+          background: #e2e8f0;
+          border-radius: 12px;
+          position: relative;
+          cursor: pointer;
+          transition: background 0.3s;
+        }
+
+        .toggle input::before {
+          content: "";
+          position: absolute;
+          width: 18px;
+          height: 18px;
+          background: #14b8a6;
+          border-radius: 50%;
+          top: 2px;
+          left: 3px;
+          transition: all 0.3s ease;
+        }
+
+        .toggle input:checked::before {
+          left: 24px;
+          background: #3b82f6;
+        }
+
+        .toggle input:checked ~ label[for="register"] {
+          color: #3b82f6;
+        }
+
+        .toggle input:not(:checked) ~ label[for="login"] {
+          color: #14b8a6;
+        }
+
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 15px;
+        }
+
+        .form-group input {
+          background: #ffffff;
+          border: 1px solid #cbd5e1;
+          padding: 12px;
+          border-radius: 8px;
+          color: #0f172a;
+          outline: none;
+          font-size: 0.95rem;
+          transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+          border-color: #14b8a6;
+          box-shadow: 0 0 6px rgba(20,184,166,0.4);
+        }
+
+        .btn {
+          width: 100%;
+          padding: 12px;
+          background: linear-gradient(90deg, #14b8a6, #3b82f6);
+          border: none;
+          border-radius: 8px;
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+          transform: scale(1.03);
+          box-shadow: 0 4px 15px rgba(20,184,166,0.4);
+        }
+
+        .forgot {
+          text-align: center;
+          margin-top: 10px;
+          font-size: 0.85rem;
+          color: #64748b;
+          cursor: pointer;
+          transition: color 0.3s;
+        }
+
+        .forgot:hover {
+          color: #14b8a6;
+        }
+
+        .flash {
+          padding: 10px;
+          margin-bottom: 15px;
+          border-radius: 6px;
+          text-align: center;
+          font-weight: 500;
+        }
+
+        .flash.success {
+          background-color: rgba(20,184,166,0.1);
+          color: #0f766e;
+          border: 1px solid rgba(20,184,166,0.3);
+        }
+
+        .flash.error {
+          background-color: rgba(239,68,68,0.1);
+          color: #b91c1c;
+          border: 1px solid rgba(239,68,68,0.3);
+        }
+
+        @media (max-width: 768px) {
+          .container {
+            flex-direction: column;
+            width: 90%;
+            padding: 30px;
+          }
+
+          .logo-section, .form-section {
+            width: 100%;
+          }
+
+          .logo-section {
+            margin-bottom: 30px;
+          }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logo-section">
+        <div class="logo">🍽️</div>
+        <h1>NutriTrack</h1>
+        <p>Smart Nutrition, Simplified.</p>
+    </div>
+    <div class="form-section">
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- Toggle Login/Register -->
+        <div class="toggle">
+            <label for="login">Login</label>
+            <input type="checkbox" id="toggleMode" />
+            <label for="register">Register</label>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" action="{{ url_for('auth.login') }}" method="POST">
+            <div class="form-group">
+                <input type="email" name="email" placeholder="Email" required />
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Password" required />
+            </div>
+            <button class="btn">LOGIN</button>
+            <div class="forgot">Forgot Password?</div>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" action="{{ url_for('auth.register') }}" method="POST" style="display:none;">
+            <div class="form-group">
+                <input type="text" name="first_name" placeholder="First Name" required />
+            </div>
+            <div class="form-group">
+                <input type="text" name="last_name" placeholder="Last Name" />
+            </div>
+            <div class="form-group">
+                <input type="email" name="email" placeholder="Email" required />
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Password" required />
+            </div>
+            <button class="btn">REGISTER</button>
+            <div class="forgot">Forgot Password?</div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const toggle = document.getElementById("toggleMode");
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+
+    // Show the correct form on page load
+    {% if active_form == "register" %}
+        loginForm.style.display = "none";
+        registerForm.style.display = "block";
+        toggle.checked = true;
+    {% else %}
+        loginForm.style.display = "block";
+        registerForm.style.display = "none";
+        toggle.checked = false;
+    {% endif %}
+
+    toggle.addEventListener("change", () => {
+      if (toggle.checked) {
+        loginForm.style.display = "none";
+        registerForm.style.display = "block";
+      } else {
+        loginForm.style.display = "block";
+        registerForm.style.display = "none";
+      }
+    });
+</script>
+
+</body>
+</html>

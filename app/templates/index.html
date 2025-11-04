@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NutriTrack - Personal Digital Diet & Nutrition Auditor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+          background-color: #f8f9fa;
+        }
+        .nav-link.active {
+          font-weight: 600;
+        }
+        .form-section {
+          max-width: 600px;
+          margin: 2rem auto;
+          background: white;
+          padding: 2rem;
+          border-radius: 0.5rem;
+          box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+        }
+        footer {
+          margin-top: 3rem;
+          padding: 1rem 0;
+          text-align: center;
+          color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#">NutriTrack</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="#login">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="#register">Register</a></li>
+                <li class="nav-item"><a class="nav-link" href="#profile">Profile Setup</a></li>
+                <li class="nav-item"><a class="nav-link" href="#foodlog">Food Logging</a></li>
+                <li class="nav-item"><a class="nav-link" href="#dashboard">Dashboard</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Login Section -->
+<section id="login" class="form-section">
+    <h2 class="mb-4">User  Login</h2>
+    <form method="POST" action="/login">
+        <div class="mb-3">
+            <label for="loginEmail" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="loginEmail" name="email" placeholder="Enter email" required />
+        </div>
+        <div class="mb-3">
+            <label for="loginPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Password" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+</section>
+
+<!-- Registration Section -->
+<section id="register" class="form-section">
+    <h2 class="mb-4">User  Registration</h2>
+    <form method="POST" action="/register">
+        <div class="mb-3">
+            <label for="registerName" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="registerName" name="name" placeholder="Your full name" required />
+        </div>
+        <div class="mb-3">
+            <label for="registerEmail" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="registerEmail" name="email" placeholder="Enter email" required />
+        </div>
+        <div class="mb-3">
+            <label for="registerPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="registerPassword" name="password" placeholder="Password" required />
+        </div>
+        <button type="submit" class="btn btn-success w-100">Register</button>
+    </form>
+</section>
+
+<!-- Profile Setup Section -->
+<section id="profile" class="form-section">
+    <h2 class="mb-4">Profile Setup</h2>
+    <form method="POST" action="/profile">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="age" class="form-label">Age</label>
+                <input type="number" class="form-control" id="age" name="age" min="1" max="120" required />
+            </div>
+            <div class="col-md-6">
+                <label for="gender" class="form-label">Gender</label>
+                <select class="form-select" id="gender" name="gender" required>
+                    <option value="" selected disabled>Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="weight" class="form-label">Weight (kg)</label>
+                <input type="number" class="form-control" id="weight" name="weight" min="20" max="300" step="0.1" required />
+            </div>
+            <div class="col-md-6">
+                <label for="height" class="form-label">Height (cm)</label>
+                <input type="number" class="form-control" id="height" name="height" min="50" max="250" step="0.1" required />
+            </div>
+            <div class="col-md-6">
+                <label for="activity" class="form-label">Activity Level</label>
+                <select class="form-select" id="activity" name="activity_level" required>
+                    <option value="" selected disabled>Select activity level</option>
+                    <option value="sedentary">Sedentary</option>
+                    <option value="light">Lightly active</option>
+                    <option value="moderate">Moderately active</option>
+                    <option value="active">Active</option>
+                    <option value="very_active">Very active</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="diet" class="form-label">Dietary Preferences</label>
+                <select class="form-select" id="diet" name="dietary_preferences" required>
+                    <option value="" selected disabled>Select preference</option>
+                    <option value="none">None</option>
+                    <option value="vegetarian">Vegetarian</option>
+                    <option value="vegan">Vegan</option>
+                    <option value="pescatarian">Pescatarian</option>
+                    <option value="keto">Keto</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <label for="allergies" class="form-label">Allergies (comma separated)</label>
+                <input type="text" class="form-control" id="allergies" name="allergies" placeholder="e.g. peanuts, gluten" />
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-4 w-100">Save Profile</button>
+    </form>
+</section>
+
+<!-- Food Logging Section -->
+<section id="foodlog" class="form-section">
+    <h2 class="mb-4">Food Logging</h2>
+    <form method="POST" action="/foodlog">
+        <div class="mb-3">
+            <label for="foodName" class="form-label">Food Item</label>
+            <input type="text" class="form-control" id="foodName" name="food_name" placeholder="e.g. Dal Tadka" required />
+        </div>
+        <div class="mb-3">
+            <label for="portionSize" class="form-label">Portion Size (grams)</label>
+            <input type="number" class="form-control" id="portionSize" name="portion_size" min="1" required />
+        </div>
+        <div class="mb-3">
+            <label for="mealType" class="form-label">Meal Type</label>
+            <select class="form-select" id="mealType" name="meal_type" required>
+                <option value="" selected disabled>Select meal</option>
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snack">Snack</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success w-100">Log Food</button>
+    </form>
+</section>
+
+<!-- Dashboard Section -->
+<section id="dashboard" class="form-section">
+    <h2 class="mb-4">Dashboard</h2>
+    <p>Welcome to your NutriTrack dashboard! Here you will see your daily calorie intake, macronutrient breakdown, micronutrient tracking, and personalized recommendations.</p>
+    <div class="alert alert-info" role="alert">
+        Dashboard charts and reports will be displayed here after backend integration.
+    </div>
+</section>
+
+<footer>
+    &copy; 2024 NutriTrack. All rights reserved.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
