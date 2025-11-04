@@ -2,6 +2,7 @@ from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 from datetime import datetime
+from datetime import date
 from sqlalchemy.sql import func
 from pytz import timezone
 
@@ -33,6 +34,8 @@ class User(db.Model):
     daily_login_streak = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(IST), nullable=False)
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(IST), nullable=False)
+
+    meals = db.relationship('UserMealLog', back_populates='user', cascade='all, delete')
 
     # ---------------------
     # Password Handling
@@ -100,3 +103,27 @@ class IndianMeal(db.Model):
     vitc_mg = db.Column(db.Float)
     sodium_mg = db.Column(db.Float)
     potassium_mg = db.Column(db.Float)
+
+class UserMealLog(db.Model):
+    __tablename__ = 'user_meal_log'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    date = db.Column(db.Date, default=date.today, nullable=False)
+
+    user = db.relationship('User', back_populates='meals')
+    meal_entries = db.relationship('MealEntry', back_populates='meal_log', cascade='all, delete')
+
+
+class MealEntry(db.Model):
+    __tablename__ = 'meal_entry'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    meal_log_id = db.Column(db.Integer, db.ForeignKey('user_meal_log.id'), nullable=False)
+    food_id = db.Column(db.Integer, db.ForeignKey('indian_foods.id'), nullable=False)
+
+    meal_type = db.Column(db.Enum('breakfast', 'lunch', 'dinner', 'misc', name='meal_type_enum'), nullable=False)
+    quantity = db.Column(db.Float, nullable=False, default=1.0)
+    tota_calories = db.Column(db.Float)
+
+    meal_log = db.relationship('UserMealLog', back_populates='meal_entries')
+    food = db.relationship('IndianMeal')
