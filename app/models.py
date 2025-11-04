@@ -87,7 +87,7 @@ class User(db.Model):
 class IndianMeal(db.Model):
     __tablename__ = 'indian_foods'
 
-    id = db.Column(db.Integer)
+    id = db.Column(db.Integer, primary_key=True)
     food_code = db.Column(db.String(10))
     food_name = db.Column(db.String(150))
     energy_kcal = db.Column(db.Float)
