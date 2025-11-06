@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log Food | NutriTrack</title>
+  <style>
+    body { margin: 0; font-family: 'Poppins', sans-serif; background: #f7faf7; color: #333; display: flex; }
+    .container { display: flex; width: 100%; min-height: 100vh; }
+    .sidebar { background: #eafaf0; width: 220px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+    .sidebar .logo { color: #00b268; text-align: center; }
+    .sidebar nav a { display: block; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; color: #333; text-decoration: none; }
+    .sidebar nav a.active, .sidebar nav a:hover { background: #00b268; color: #fff; }
+    .logout { background: #dff5e6; border: none; padding: 10px; border-radius: 6px; cursor: pointer; }
+    .main { flex: 1; padding: 20px 40px; }
+    h2 { color: #00b268; margin-bottom: 20px; }
+    form { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    label { display: block; margin-top: 15px; font-weight: 500; }
+    select, input { width: 100%; padding: 8px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; }
+    button { background: #00b268; color: #fff; border: none; padding: 10px 15px; border-radius: 8px; margin-top: 20px; cursor: pointer; }
+    button:hover { background: #009158; }
+    .food-list { margin-top: 15px; }
+    .food-item { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .food-item input { width: 80px; }
+
+    /* --- Added for meal log display --- */
+    .logged-section { margin-top: 40px; }
+    .meal-group { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    .meal-group h3 { color: #00b268; margin-bottom: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
+    th { background: #eafaf0; }
+    tfoot td { font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2 class="logo">🍏 NutriTrack</h2>
+      <nav>
+        <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('meal.log_meal') }}" class="active">Log Food</a>
+        <a href="#">Analytics</a>
+        <a href="#">Meal Planner</a>
+        <a href="#">Achievements</a>
+        <a href="#">Profile</a>
+      </nav>
+      <button class="logout"><a href="{{ url_for('auth.logout') }}">Logout</a></button>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <h2>Log Your Food Intake</h2>
+
+      <form method="POST" action="{{ url_for('meal.log_meal') }}">
+        <label for="meal_type">Meal Type</label>
+        <select name="meal_type" id="meal_type" required>
+          <option value="breakfast">Breakfast</option>
+          <option value="lunch">Lunch</option>
+          <option value="dinner">Dinner</option>
+          <option value="misc">Miscellaneous</option>
+        </select>
+
+        <label for="foodSelect">Select Food Items</label>
+        <select id="foodSelect" name="food_ids" multiple required>
+          {% for food in foods %}
+            <option value="{{ food.id }}">{{ food.food_name }}</option>
+          {% endfor %}
+        </select>
+
+        <div id="quantityInputs" class="food-list"></div>
+
+        <button type="submit">Save Meal</button>
+      </form>
+
+      {% if grouped_meals %}
+      <section class="logged-section">
+        <h2>Today's Logged Meals</h2>
+
+        {% for meal_type, entries in grouped_meals.items() %}
+        <div class="meal-group">
+          <h3>{{ meal_type.capitalize() }}</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Food</th>
+                <th>Qty (g)</th>
+                <th>Calories</th>
+                <th>Protein (g)</th>
+                <th>Carbs (g)</th>
+                <th>Fat (g)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for e in entries %}
+              <tr>
+                <td>{{ e.food.food_name }}</td>
+                <td>{{ e.quantity }}</td>
+                <td>{{ "%.1f"|format(e.calories) }}</td>
+                <td>{{ "%.1f"|format(e.protein) }}</td>
+                <td>{{ "%.1f"|format(e.carbs) }}</td>
+                <td>{{ "%.1f"|format(e.fat) }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endfor %}
+
+        <div class="meal-group">
+          <h3>Daily Total</h3>
+          <table>
+            <tr><th>Total Calories</th><td>{{ "%.1f"|format(meal_log.total_calories if meal_log else 0) }}</td></tr>
+            <tr><th>Protein</th><td>{{ "%.1f"|format(meal_log.total_protein if meal_log else 0) }}</td></tr>
+            <tr><th>Carbs</th><td>{{ "%.1f"|format(meal_log.total_carbs if meal_log else 0) }}</td></tr>
+            <tr><th>Fat</th><td>{{ "%.1f"|format(meal_log.total_fat if meal_log else 0) }}</td></tr>
+            <tr><th>Fibre</th><td>{{ "%.1f"|format(meal_log.total_fibre if meal_log else 0) }}</td></tr>
+          </table>
+        </div>
+      </section>
+      {% endif %}
+    </main>
+  </div>
+
+  <script>
+  document.getElementById('foodSelect').addEventListener('change', function() {
+    const container = document.getElementById('quantityInputs');
+    container.innerHTML = '';
+    [...this.selectedOptions].forEach(opt => {
+      const div = document.createElement('div');
+      div.className = 'food-item';
+      div.innerHTML = `
+        <span>${opt.text}</span>
+        <input type="number" name="quantities" min="1" step="1" placeholder="grams" required>
+      `;
+      container.appendChild(div);
+    });
+  });
+  </script>
+</body>
+</html>

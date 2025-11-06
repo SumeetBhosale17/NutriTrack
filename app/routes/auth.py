@@ -1,9 +1,10 @@
 from flask import Blueprint, request, render_template, redirect, url_for, flash, session
+from flask_login import login_user, logout_user, login_required, current_user
 from config import Config
 from app.models import User
 from app import db
 import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -41,21 +42,35 @@ def login():
             flash("Invalid Credentials", "error")
             return redirect(url_for('auth.login'))
 
-        session['user_id'] = user.id
-        # Update last login
+        login_user(user)
+        
+        today = date.today()
+
+        if user.last_login:
+            last_login_date = user.last_login.date()
+            if last_login_date == today - timedelta(days=1):
+                user.daily_login_streak += 1
+            elif last_login_date == today:
+                pass
+            else:
+                user.daily_login_streak = 1
+        else:
+            user.daily_login_streak = 1
+
         user.last_login = datetime.now()
         db.session.commit()
 
         flash("Login Successful", "success")
         if abs((user.updated_at - user.created_at).total_seconds()) < 1:
             return redirect(url_for('auth.setup_profile'))
-        return redirect(url_for('auth.profile_complete'))  # redirect to dashboard or home page
+        return redirect(url_for('dashboard.dashboard'))  # redirect to dashboard or home page
     
     return render_template('sign.html')
 
 @auth_bp.route('/setup-profile', methods=['GET', 'POST'])
+@login_required
 def setup_profile():
-    user_id = session.get('user_id')
+    user_id = current_user.id
     if not user_id:
         return redirect(url_for('auth.login'))
     
@@ -72,10 +87,11 @@ def setup_profile():
 
         user.calculate_bmi()
         user.calculate_maintenance_calories()
+        user.calculate_nutrition()
 
         db.session.commit()
         flash("Profile setup complete!", "Success")
-        return redirect(url_for('auth.profile_complete'))
+        return redirect(url_for('dashboard.dashboard'))
     
     return render_template('profile-setup.html', user=user)
 
@@ -142,3 +158,10 @@ def profile_complete():
     
     user = User.query.get(user_id)
     return 'profile complete'
+
+@auth_bp.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("You have been logged out.", "info")
+    return redirect(url_for('auth.login'))
