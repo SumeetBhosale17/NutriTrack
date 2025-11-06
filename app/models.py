@@ -5,10 +5,11 @@ from datetime import datetime
 from datetime import date
 from sqlalchemy.sql import func
 from pytz import timezone
+from flask_login import UserMixin
 
 IST = timezone('Asia/Kolkata')
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -34,9 +35,21 @@ class User(db.Model):
     daily_login_streak = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(IST), nullable=False)
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(IST), nullable=False)
+    protein = db.Column(db.Numeric(7, 2))
+    carbs = db.Column(db.Numeric(7, 2))
+    fats = db.Column(db.Numeric(7, 2))
+    fibers = db.Column(db.Numeric(7, 2))
+    iron = db.Column(db.Numeric(7, 2))
+    calcium = db.Column(db.Numeric(7, 2))
+    vitamin_c = db.Column(db.Numeric(7, 2))
+    sodium = db.Column(db.Numeric(7, 2))
+    potassium =  db.Column(db.Numeric(7, 2))
 
-    meals = db.relationship('UserMealLog', back_populates='user', cascade='all, delete')
-
+    meal_logs = db.relationship(
+        'UserMealLog',
+        back_populates = 'user',
+        cascade = 'all, delete-orphan'
+    )
     # ---------------------
     # Password Handling
     # ---------------------
@@ -80,6 +93,31 @@ class User(db.Model):
         else:
             self.maintenance_calories = None
     
+    def calculate_nutrition(self):
+        protein_factors = {
+            "Sedentary (Little or no exercise)": 1.2,
+            "Lightly Active (1–3 days/week)": 1.4,
+            "Moderately Active (3–5 days/week)": 1.6,
+            "Very Active (6–7 days/week)": 1.8,
+            "Super Active (Physical job or athlete)": 2.0
+        }
+
+        weight = float(self.weight_kg) if self.weight_kg else None
+        calories = float(self.maintenance_calories) if self.maintenance_calories else None
+
+        if not calories or not weight:
+            return
+        
+        self.protein = protein_factors.get(self.activity_level, 1.375) * weight
+        self.fats = (0.30 * calories) / 9
+        self.carbs = (calories - (self.protein * 4 + self.fats * 9)) / 4
+        self.fibers = (calories / 1000) * 14
+        self.iron = 8 if self.gender == 'Male' else 18
+        self.calcium = 1000
+        self.vitamin_c = 90 if self.gender == 'Male' else 75
+        self.sodium = 1500
+        self.potassium = 3400 if self.gender == 'Male' else 2600
+    
     # ---------------------
     # Representation
     # ---------------------
@@ -110,8 +148,25 @@ class UserMealLog(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     date = db.Column(db.Date, default=date.today, nullable=False)
 
-    user = db.relationship('User', back_populates='meals')
-    meal_entries = db.relationship('MealEntry', back_populates='meal_log', cascade='all, delete')
+    #Aggregated nutrition info for the meal (auto calculated)
+    total_calories = db.Column(db.Float, nullable=False, default=0.0)
+    total_protein = db.Column(db.Float, nullable=False, default=0.0)
+    total_carbs = db.Column(db.Float, nullable=False, default=0.0)
+    total_fat = db.Column(db.Float, nullable=False, default=0.0)
+    total_fibre = db.Column(db.Float, nullable=False, default=0.0)
+    total_iron = db.Column(db.Float, nullable=False, default=0.0)
+    total_calcium = db.Column(db.Float, nullable=False, default=0.0)
+    total_vitc = db.Column(db.Float, nullable=False, default=0.0)
+    total_sodium = db.Column(db.Float, nullable=False, default=0.0)
+    total_potassium = db.Column(db.Float, nullable=False, default=0.0)
+
+    user = db.relationship('User', back_populates='meal_logs')
+    meal_entries = db.relationship(
+        'MealEntry',
+        back_populates='meal_log',
+        cascade='all, delete-orphan',
+        lazy=True
+    )
 
 
 class MealEntry(db.Model):
@@ -121,9 +176,23 @@ class MealEntry(db.Model):
     meal_log_id = db.Column(db.Integer, db.ForeignKey('user_meal_log.id'), nullable=False)
     food_id = db.Column(db.Integer, db.ForeignKey('indian_foods.id'), nullable=False)
 
-    meal_type = db.Column(db.Enum('breakfast', 'lunch', 'dinner', 'misc', name='meal_type_enum'), nullable=False)
+    meal_type = db.Column(
+        db.Enum('breakfast', 'lunch', 'dinner', 'misc', name='meal_type_enum'),
+        nullable=False
+    )
+
+    #Quantity in grams or serving units
     quantity = db.Column(db.Float, nullable=False, default=1.0)
-    tota_calories = db.Column(db.Float)
+    calories = db.Column(db.Float, nullable=False, default=0.0)
+    protein = db.Column(db.Float, nullable=False, default=0.0)
+    carbs = db.Column(db.Float, nullable=False, default=0.0)
+    fat = db.Column(db.Float, nullable=False, default=0.0)
+    fibre = db.Column(db.Float, nullable=False, default=0.0)
+    iron = db.Column(db.Float, nullable=False, default=0.0)
+    calcium = db.Column(db.Float, nullable=False, default=0.0)
+    vitc = db.Column(db.Float, nullable=False, default=0.0)
+    sodium = db.Column(db.Float, nullable=False, default=0.0)
+    potassium = db.Column(db.Float, nullable=False, default=0.0)
 
     meal_log = db.relationship('UserMealLog', back_populates='meal_entries')
-    food = db.relationship('IndianMeal')
+    food = db.relationship('IndianMeal', backref='meal_entries')
