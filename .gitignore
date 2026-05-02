@@ -10,6 +10,8 @@ env/
 
 # Flask instance folder (if you use it for configs, DB)
 instance/
+*.db
+*.backup_*.db
 *.sqlite3
 
 # Environment variables
@@ -56,3 +58,5 @@ node_modules/
 
 # Ignore Jupyter Notebook checkpoints (if you use notebooks)
 .ipynb_checkpoints/
+
+AGENT.md

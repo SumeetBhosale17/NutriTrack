@@ -139,6 +139,34 @@
             height: 100%;
             background: #00b268;
         }
+        .flash {
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin: 15px 0;
+            background: #eafaf0;
+            color: #087548;
+        }
+        .profile-stats,
+        .recommendations,
+        .empty-state {
+            background: #fff;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .profile-stats {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .recommendations ul {
+            margin: 10px 0 0;
+            padding-left: 20px;
+        }
+        .empty-state {
+            color: #667085;
+        }
     </style>
 </head>
 <body>
@@ -159,6 +187,14 @@
 
         <!-- Main -->
         <main class="main">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
             <header class="topbar">
                 <input type="text" placeholder="Search foods, nutrients...">
                 <div class="icons">
@@ -177,6 +213,17 @@
                 </div>
             </section>
 
+            <section class="profile-stats">
+                <div><strong>BMI:</strong> {{ bmi or "Not available" }}</div>
+                <div><strong>Maintenance Calories:</strong> {{ "%.0f"|format(maintenance_calories) }} kcal</div>
+            </section>
+
+            {% if not has_meals %}
+            <section class="empty-state">
+                No meals logged today yet. Add a meal from the Log Food page to populate your dashboard.
+            </section>
+            {% endif %}
+
             <section class="summary">
                 {% for item in summary %}
                 <div class="card">
@@ -187,6 +234,15 @@
                     </div>
                 </div>
                 {% endfor %}
+            </section>
+
+            <section class="recommendations">
+                <h3>Today's Suggestions</h3>
+                <ul>
+                    {% for recommendation in recommendations %}
+                    <li>{{ recommendation }}</li>
+                    {% endfor %}
+                </ul>
             </section>
 
             <section class="charts">
@@ -203,7 +259,7 @@
                         <div class="bar">
                             <div class="fill" style="width: {{ micro.percent }}%"></div>
                         </div>
-                        <span>{{ micro.value }}%</span>
+                        <span>{{ micro.value }} mg</span>
                     </div>
                     {% endfor %}
                 </div>

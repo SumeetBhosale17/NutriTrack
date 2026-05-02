@@ -53,6 +53,68 @@ The application follows a modular backend structure with:
 - data access abstraction
 - reusable data processing utilities
 
+## Current Demo Setup
+
+Run with Docker:
+
+```bash
+docker compose up -d --build
+```
+
+Reset Docker data when you do not need old local records:
+
+```bash
+docker compose down -v
+docker compose up -d --build
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the app locally:
+
+```bash
+python run.py
+```
+
+Seed a few demo Indian food rows if the food database is empty:
+
+```bash
+python scripts/seed.py
+```
+
+Reset the local SQLite demo database if the schema is stale:
+
+```bash
+python scripts/reset_demo_db.py
+```
+
+Import the full Excel dataset:
+
+```bash
+python scripts/import_food_data.py
+```
+
+Run smoke tests:
+
+```bash
+pytest -q
+```
+
+---
+
+## ⚠️ Current Technical Debt
+
+- The Alembic migration history needs a clean baseline migration for fresh PostgreSQL databases.
+- The demo initializer currently uses `db.create_all()` for local/Docker demo reliability; production should rely on migrations only.
+- Runtime, development, testing, data science, and deployment packages are mixed in one `requirements.txt`.
+- Database files and local backups should remain untracked and ignored.
+- Docker should eventually use health checks instead of retry logic in the app initialization script.
+- UI templates are functional but still need component reuse, consistent layout rules, and accessibility polish.
+
 ---
 
 ## 🧰 Tech Stack

@@ -18,5 +18,5 @@ EXPOSE 5000
 ENV FLASK_APP=manage.py
 ENV FLASK_ENV=development
 
-# Default command: run migrations then start Gunicorn
-CMD bash -c "flask db upgrade && gunicorn wsgi:app --bind 0.0.0.0:5000 --workers 3"
+# Default command: initialize the demo schema then start Gunicorn
+CMD bash -c "python scripts/init_demo_db.py && gunicorn wsgi:app --bind 0.0.0.0:5000 --workers 3"

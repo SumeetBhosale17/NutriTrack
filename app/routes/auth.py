@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for, flash, session
+from flask import Blueprint, request, render_template, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from config import Config
 from app.models import User
@@ -11,14 +11,18 @@ auth_bp = Blueprint('auth', __name__)
 @auth_bp.route("/register", methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-        first_name = request.form.get('first_name')
-        last_name = request.form.get('last_name')
+        email = (request.form.get('email') or '').strip().lower()
+        password = request.form.get('password') or ''
+        first_name = (request.form.get('first_name') or '').strip()
+        last_name = (request.form.get('last_name') or '').strip()
+
+        if not email or not password or not first_name:
+            flash("First name, email, and password are required.", "error")
+            return render_template('sign.html', active_form="register")
 
         if User.query.filter_by(email=email).first():
             flash("Email already exists", "error")
-            return redirect(url_for('auth.register'))
+            return render_template('sign.html', active_form="register")
 
         user = User(email=email, first_name=first_name, last_name=last_name)
         user.set_password(password)
@@ -34,8 +38,8 @@ def register():
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get("email")
-        password = request.form.get("password")
+        email = (request.form.get("email") or "").strip().lower()
+        password = request.form.get("password") or ""
 
         user = User.query.filter_by(email=email).first()
         if not user or not user.check_password(password):
@@ -61,7 +65,7 @@ def login():
         db.session.commit()
 
         flash("Login Successful", "success")
-        if abs((user.updated_at - user.created_at).total_seconds()) < 1:
+        if not user.is_profile_complete():
             return redirect(url_for('auth.setup_profile'))
         return redirect(url_for('dashboard.dashboard'))  # redirect to dashboard or home page
     
@@ -70,19 +74,33 @@ def login():
 @auth_bp.route('/setup-profile', methods=['GET', 'POST'])
 @login_required
 def setup_profile():
-    user_id = current_user.id
-    if not user_id:
-        return redirect(url_for('auth.login'))
-    
-    user = User.query.get(user_id)
+    user = current_user
 
     if request.method == 'POST':
-        user.gender = request.form['gender']
-        user.age = int(request.form['age'])
-        user.height_cm = float(request.form['height_cm'])
-        user.weight_kg = float(request.form['weight_kg'])
-        user.goal = request.form['goal']
-        user.activity_level = request.form['activity_level']
+        try:
+            gender = request.form.get('gender', '').strip()
+            age = int(request.form.get('age', ''))
+            height_cm = float(request.form.get('height_cm', ''))
+            weight_kg = float(request.form.get('weight_kg', ''))
+            goal = request.form.get('goal', '').strip()
+            activity_level = request.form.get('activity_level', '').strip()
+        except ValueError:
+            flash("Please enter valid numeric values for age, height, and weight.", "error")
+            return render_template('profile-setup.html', user=user)
+
+        if not gender or not goal or not activity_level:
+            flash("Please complete all profile fields.", "error")
+            return render_template('profile-setup.html', user=user)
+        if age <= 0 or height_cm <= 0 or weight_kg <= 0:
+            flash("Age, height, and weight must be greater than zero.", "error")
+            return render_template('profile-setup.html', user=user)
+
+        user.gender = gender
+        user.age = age
+        user.height_cm = height_cm
+        user.weight_kg = weight_kg
+        user.goal = goal
+        user.activity_level = activity_level
         user.updated_at = datetime.now()
 
         user.calculate_bmi()
@@ -90,7 +108,7 @@ def setup_profile():
         user.calculate_nutrition()
 
         db.session.commit()
-        flash("Profile setup complete!", "Success")
+        flash("Profile setup complete!", "success")
         return redirect(url_for('dashboard.dashboard'))
     
     return render_template('profile-setup.html', user=user)
@@ -104,16 +122,12 @@ def generate_verification_token(email):
     return token
 
 @auth_bp.route('/send-verification', methods=['POST'])
+@login_required
 def send_verification():
-    user_id = session.get('user_id')
-    if not user_id:
-        flash("Please login first", 'error')
-        return redirect(url_for('auth.login'))
-    
-    user = User.query.get(user_id)
+    user = current_user
     if user.email_verified:
         flash("Email already verified!", "info")
-        return redirect(url_for('auth.dashboard'))
+        return redirect(url_for('auth.setup_profile'))
     
     token = generate_verification_token(user.email)
     verification_link = url_for('auth.verify_email', token=token, _external=True)
@@ -151,13 +165,11 @@ def verify_email(token):
         return redirect(url_for('auth.setup_profile'))
     
 @auth_bp.route('/profile-complete')
+@login_required
 def profile_complete():
-    user_id = session.get('user_id')
-    if not user_id:
-        return redirect(url_for('auth.login'))
-    
-    user = User.query.get(user_id)
-    return 'profile complete'
+    if current_user.is_profile_complete():
+        return redirect(url_for('dashboard.dashboard'))
+    return redirect(url_for('auth.setup_profile'))
 
 @auth_bp.route('/logout')
 @login_required

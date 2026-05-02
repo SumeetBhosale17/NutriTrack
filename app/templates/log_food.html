@@ -27,6 +27,10 @@
     .logged-section { margin-top: 40px; }
     .meal-group { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
     .meal-group h3 { color: #00b268; margin-bottom: 10px; }
+    .flash { padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; background: #eafaf0; color: #087548; }
+    .flash.error { background: #fff1f2; color: #be123c; }
+    .flash.info { background: #eff6ff; color: #1d4ed8; }
+    .empty-state { background: #fff; padding: 18px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); color: #667085; }
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
     th { background: #eafaf0; }
@@ -53,6 +57,19 @@
     <main class="main">
       <h2>Log Your Food Intake</h2>
 
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      {% if not foods %}
+      <div class="empty-state">
+        No food items are available yet. Run the demo seed script or import the Indian food dataset before logging meals.
+      </div>
+      {% else %}
       <form method="POST" action="{{ url_for('meal.log_meal') }}">
         <label for="meal_type">Meal Type</label>
         <select name="meal_type" id="meal_type" required>
@@ -73,6 +90,7 @@
 
         <button type="submit">Save Meal</button>
       </form>
+      {% endif %}
 
       {% if grouped_meals %}
       <section class="logged-section">
@@ -118,6 +136,10 @@
             <tr><th>Fibre</th><td>{{ "%.1f"|format(meal_log.total_fibre if meal_log else 0) }}</td></tr>
           </table>
         </div>
+      </section>
+      {% elif foods %}
+      <section class="logged-section">
+        <div class="empty-state">No meals logged today yet.</div>
       </section>
       {% endif %}
     </main>

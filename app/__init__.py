@@ -38,8 +38,4 @@ def create_app(config_object="config.Config"):
     from app.routes.meal import meal_bp
     app.register_blueprint(meal_bp)
 
-
-    with app.app_context():
-        db.create_all()
-        
     return app

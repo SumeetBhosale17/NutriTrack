@@ -58,6 +58,22 @@ class User(db.Model, UserMixin):
     
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def is_profile_complete(self):
+        required_fields = [
+            self.gender,
+            self.age,
+            self.height_cm,
+            self.weight_kg,
+            self.goal,
+            self.activity_level,
+            self.maintenance_calories,
+            self.protein,
+            self.carbs,
+            self.fats,
+            self.fibers,
+        ]
+        return all(value is not None and value != "" for value in required_fields)
     
     # ---------------------
     # BMI Calculation

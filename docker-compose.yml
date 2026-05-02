@@ -20,7 +20,7 @@ services:
       - .:/app   # map entire project for Flask & Gunicorn
     depends_on:
       - db
-    command: bash -c "flask db upgrade && gunicorn wsgi:app --bind 0.0.0.0:5000 --workers 3"
+    command: bash -c "python scripts/init_demo_db.py && gunicorn wsgi:app --bind 0.0.0.0:5000 --workers 3"
 
 volumes:
   db_data:
